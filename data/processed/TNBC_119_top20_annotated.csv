@@ -1,0 +1,21 @@
+Probe_ID,Gene symbol,Gene title,Gene ID,Chromosome location,TNBC_119,Cohort_Median,Difference,Absolute_Difference
+205358_at,GRIA2,glutamate ionotropic receptor AMPA type subunit 2,2891,4q32.1,0.020405,-0.009673,0.030078,0.030078
+209752_at,REG1A,regenerating family member 1 alpha,5967,2p12,0.01846,-0.005924,0.024384,0.024384
+209560_s_at,DLK1,delta like non-canonical Notch ligand 1,8788,14q32,0.021063,-0.002358,0.0234209999999999,0.0234209999999999
+213492_at,COL2A1,collagen type II alpha 1 chain,1280,12q13.11,0.021093,-0.001687,0.02278,0.02278
+217404_s_at,COL2A1,collagen type II alpha 1 chain,1280,12q13.11,0.017832,-0.004653,0.022485,0.022485
+207165_at,HMMR,hyaluronan mediated motility receptor,3161,5q34,-0.01478,0.006384,-0.021164,0.021164
+204259_at,MMP7,matrix metallopeptidase 7,4316,11q22.2,-0.009096,0.010841,-0.019937,0.019937
+209772_s_at,CD24,CD24 molecule,100133941,6q21,-0.008378,0.011385,-0.019763,0.019763
+205475_at,SCRG1,stimulator of chondrogenesis 1,11341,4q34.1,0.020645,0.001255,0.01939,0.01939
+213870_at,COL11A2,collagen type XI alpha 2 chain,1302,6p21.3,0.016007,-0.003196,0.019203,0.019203
+219306_at,KIF15,kinesin family member 15,56992,3p21.31,-0.015259,0.003694,-0.018953,0.018953
+204712_at,WIF1,WNT inhibitory factor 1,11197,12q14.3,0.016276,-0.001623,0.0178989999999999,0.0178989999999999
+204940_at,PLN,phospholamban,5350,6q22.1,-0.018909,-0.001016,-0.017893,0.017893
+204734_at,KRT15,keratin 15,3866,17q21.2,0.019089,0.00126,0.0178289999999999,0.0178289999999999
+208650_s_at,CD24,CD24 molecule,100133941,6q21,-0.004099,0.013721,-0.01782,0.01782
+204162_at,NDC80,"NDC80, kinetochore complex component",10403,18p11.32,-0.011758,0.005994,-0.017752,0.017752
+216984_x_at,IGLJ3///IGLV1-44///CKAP2///IGLV@///IGLC1,immunoglobulin lambda joining 3///immunoglobulin lambda variable 1-44///cytoskeleton associated protein 2///immunoglobulin lambda variable cluster///immunoglobulin lambda constant 1,28831///28823///26586///3546///3537,22q11.2///22q11.2///13q14///22q11.2///22q11.2,-0.007091,0.010639,-0.01773,0.01773
+202580_x_at,FOXM1,forkhead box M1,2305,12p13,-0.011669,0.00588,-0.017549,0.017549
+222283_at,ZNF480,zinc finger protein 480,147657,19q13.41,-0.018191,-0.000771,-0.0174199999999999,0.0174199999999999
+203914_x_at,HPGD,hydroxyprostaglandin dehydrogenase 15-(NAD),3248,4q34-q35,-0.016755,0.000596,-0.017351,0.017351

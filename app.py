@@ -2,7 +2,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import date
-
+from data_quality import calculate_data_quality
 # --------------------------------------------------
 # PAGE CONFIGURATION
 # --------------------------------------------------
@@ -64,16 +64,6 @@ geo_accession = st.sidebar.text_input(
     value="GSE31519"
 )
 
-researcher = st.sidebar.text_input(
-    "Researcher name",
-    value="Research Team"
-)
-
-project_description = st.sidebar.text_area(
-    "Project description",
-    value="TNBC biomarker discovery and validation research."
-)
-
 st.sidebar.divider()
 
 st.sidebar.caption("TNBC Research Demo | Version 1.0")
@@ -82,10 +72,14 @@ st.sidebar.caption("TNBC Research Demo | Version 1.0")
 # PROJECT OVERVIEW
 # --------------------------------------------------
 
-st.header("Research Project Details")
+st.header("PROJECT OVERVIEW")
+
+st.write(
+    "**Research description:** "
+    "TNBC biomarker discovery and validation research."
+)
 
 col1, col2, col3 = st.columns(3)
-
 with col1:
     st.metric("Project", project_name)
 
@@ -94,9 +88,6 @@ with col2:
 
 with col3:
     st.metric("Workspace sections", "05")
-
-st.write("**Research description:**", project_description)
-st.write("**Researcher:**", researcher)
 
 st.divider()
 
@@ -144,14 +135,16 @@ with tab1:
     )
 
     platform = st.text_input(
-        "Technology / Platform",
+        "Experiment Type",
         value="Microarray (demo)"
     )
 
-    sample_count = st.number_input(
+    sample_count = 579
+
+    st.text_input(
         "Number of samples",
-        min_value=0,
-        value=579
+        value=str(sample_count),
+        disabled=True
     )
 
     collection_details = st.text_area(
@@ -172,6 +165,8 @@ with tab1:
 
 with tab2:
 
+    quality = calculate_data_quality()
+
     st.subheader("02 | Data Quality")
 
     st.write(
@@ -182,13 +177,22 @@ with tab2:
     c1, c2, c3 = st.columns(3)
 
     with c1:
-        st.metric("Demo samples", "579")
+        st.metric(
+            "Samples in metadata",
+            f"{quality['samples']:,}"
+        )
 
     with c2:
-        st.metric("Demo features", "22,283")
+        st.metric(
+            "Expression probes",
+            f"{quality['probes']:,}"
+        )
 
     with c3:
-        st.metric("Missing expression", "0.0082%")
+        st.metric(
+            "Missing expression",
+            f"{quality['missing_percentage']:.4f}%"
+        )
 
     st.markdown("### Quality assessment")
 
@@ -204,8 +208,12 @@ with tab2:
 
     batch_effects = st.selectbox(
         "Batch effect assessment",
-        ["Not assessed", "No major effect detected",
-         "Potential batch effect", "Batch effect detected"]
+        [
+            "Not assessed",
+            "No major effect detected",
+            "Potential batch effect",
+            "Batch effect detected"
+        ]
     )
 
     replicates = st.selectbox(
@@ -219,8 +227,11 @@ with tab2:
     )
 
     st.caption(
-        "The displayed metrics are example values, not live QC calculations."
+        "Metrics are calculated from the downloaded files. "
+        "Sample-column alignment and missing-value parsing "
+        "still require scientific validation."
     )
+
 
 # --------------------------------------------------
 # TAB 3 - CANDIDATE SIGNALS
@@ -335,42 +346,109 @@ with tab5:
     st.subheader("05 | Evidence Report")
 
     st.write(
-        "Summarize the research findings, evidence strength "
-        "and remaining limitations."
+        "Research findings generated from the TNBC dataset "
+        "and completed data quality investigations."
     )
 
-    findings = st.text_area(
-        "Key research findings",
-        placeholder="Summarize the findings supported by your analysis..."
+    # Dataset information
+    st.markdown("### 1. Dataset overview")
+
+    quality = calculate_data_quality()
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Samples", f"{quality['samples']:,}")
+    col2.metric("Expression probes", f"{quality['probes']:,}")
+    col3.metric(
+        "Missing values",
+        f"{quality['missing_percentage']:.5f}%"
     )
+
+    st.markdown("### 2. Verified findings")
+
+    verified_findings = [
+        "All 579 metadata sample names match the expression matrix.",
+        "No duplicate expression sample identities were detected.",
+        "The expression matrix contains 22,283 probes.",
+        "Overall missingness is approximately 0.00816%.",
+        "No non-numeric expression values were detected.",
+        "Expression distributions and platform differences were investigated.",
+        "PCA and sample correlation analyses were performed.",
+        "Potential expression outliers were identified for further review.",
+        "Cohort-specific expression differences require further investigation."
+    ]
+
+    for finding in verified_findings:
+        st.markdown(f"- {finding}")
+
+    st.markdown("### 3. TNBC_119 investigation")
+
+    st.write(
+        "TNBC_119 showed an unusual expression profile within cohort 9. "
+        "Its mean expression was lower than that of the other cohort 9 "
+        "samples, and its expression profile differed across multiple probes."
+    )
+
+    st.write(
+        "Exploratory probe annotation identified differences involving "
+        "GRIA2, REG1A, DLK1, COL2A1, HMMR, MMP7 and CD24."
+    )
+
+    st.warning(
+        "These findings are exploratory. They do not establish "
+        "biomarker validity or clinical significance."
+    )
+
+    st.markdown("### 4. Evidence strength")
 
     evidence_strength = st.selectbox(
         "Overall evidence strength",
         [
-            "Not assessed",
             "Exploratory",
             "Preliminary",
             "Supported by independent validation"
-        ]
+        ],
+        index=0
     )
+
+    if evidence_strength == "Supported by independent validation":
+        st.warning(
+            "Select this status only after independent validation "
+            "has actually been completed."
+        )
+
+    st.markdown("### 5. Research limitations")
 
     limitations = st.text_area(
         "Research limitations",
         value=(
-            "This demonstration does not establish clinical validity. "
-            "Independent validation and further statistical assessment "
-            "are required."
-        )
+            "The dataset combines multiple cohorts and array platforms. "
+            "Cohort and technical effects may be confounded. "
+            "Potential outliers require further review. "
+            "Independent validation has not yet been completed. "
+            "No clinical biomarker performance has been established."
+        ),
+        height=140
     )
+
+    st.markdown("### 6. Next research steps")
 
     next_steps = st.text_area(
         "Next research steps",
-        placeholder="Describe the next steps..."
+        value=(
+            "1. Investigate cohort-specific expression differences.\n"
+            "2. Evaluate potential batch effects.\n"
+            "3. Complete exploratory candidate-gene analysis.\n"
+            "4. Obtain independent validation datasets.\n"
+            "5. Evaluate candidate biomarkers using appropriate "
+            "statistical methods."
+        ),
+        height=140
     )
 
     st.divider()
 
-    st.markdown("### Research report preview")
+    st.markdown("### 7. Research report preview")
 
     report = f"""
 # {project_name}
@@ -378,21 +456,36 @@ with tab5:
 ## Dataset
 Accession: {geo_accession}
 
-## Key findings
-{findings}
+Samples: {quality['samples']}
+Expression probes: {quality['probes']}
+Missing values: {quality['missing_values']}
+Missing percentage: {quality['missing_percentage']:.5f}%
+
+## Verified findings
+
+{chr(10).join("- " + item for item in verified_findings)}
+
+## TNBC_119 investigation
+
+TNBC_119 showed an unusual expression profile within cohort 9.
+Probe-level differences require further investigation.
 
 ## Evidence strength
+
 {evidence_strength}
 
 ## Limitations
+
 {limitations}
 
-## Next steps
+## Next research steps
+
 {next_steps}
 
 ---
 Generated on: {date.today()}
-Research demonstration only. Not for clinical decision-making.
+
+Research prototype only. Not for clinical decision-making.
 """
 
     st.download_button(
@@ -401,14 +494,3 @@ Research demonstration only. Not for clinical decision-making.
         file_name="TNBC_research_evidence_report.md",
         mime="text/markdown"
     )
-
-# --------------------------------------------------
-# FOOTER
-# --------------------------------------------------
-
-st.divider()
-
-st.caption(
-    "TNBC New Project | Research prototype | "
-    "For academic and exploratory research only."
-)

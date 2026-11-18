@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+.streamlit/secrets.toml
+data/annotation_old
+sample_comparison.txt
